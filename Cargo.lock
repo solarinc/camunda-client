@@ -1,0 +1,4 @@
+[[package]]
+name = "camunda-client"
+version = "0.1.0"
+
