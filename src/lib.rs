@@ -1,7 +1,7 @@
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
-}
+#[macro_use]
+extern crate log;
+extern crate hyper;
+extern crate hyper_multipart_rfc7578;
+
+pub mod deployment;
+pub mod process_definition;
