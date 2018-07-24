@@ -1,5 +1,6 @@
 #[macro_use]
 extern crate log;
+extern crate tokio;
 extern crate hyper;
 extern crate hyper_multipart_rfc7578;
 

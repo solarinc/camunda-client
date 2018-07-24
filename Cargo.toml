@@ -6,5 +6,6 @@ authors = ["Maximb <sprayrules@gmail.com>"]
 [dependencies]
 
 log = "*"
+tokio = "*"
 hyper = "*"
 hyper-multipart-rfc7578 = "0.2.0-alpha2"
