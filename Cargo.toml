@@ -6,6 +6,9 @@ authors = ["Maximb <sprayrules@gmail.com>"]
 [dependencies]
 
 log = "*"
+futures = "0.1.21"
 tokio = "*"
 hyper = "*"
 hyper-multipart-rfc7578 = "0.2.0-alpha2"
+mio_httpc = "*"
+

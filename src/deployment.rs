@@ -22,7 +22,6 @@ pub fn create(url: &str, path_to_file: &str) {
 }
 
 //#[test]
-fn test_create() {
-    // claim-processing.bpmn
+fn test_create() {    
     create("http://127.0.0.1:8080/engine-rest/deployment/create", "test-process.bpmn");
 }
