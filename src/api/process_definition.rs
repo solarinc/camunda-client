@@ -32,13 +32,17 @@ pub fn start_by_key(host: &str, key: &str, body: &str) -> Result<(), task::Error
         .url(&url).unwrap()
         .exec()?;
 
+    let q = String::from_utf8(res);
+
+    println!("{:?}", q);
+
     Ok(())
 }
 
 #[test]
 fn test_start_by_key() {
     let host = "http://127.0.0.1:8080";
-    let key = "TestProcess";
+    let key = "ClaimProcessing";
 
     assert!(start_by_key(host, key, "{}").is_ok());
 }
