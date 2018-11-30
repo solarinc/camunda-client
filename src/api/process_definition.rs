@@ -42,7 +42,7 @@ pub fn start_by_key(host: &str, key: &str, body: &str) -> Result<(), task::Error
 #[test]
 fn test_start_by_key() {
     let host = "http://127.0.0.1:8080";
-    let key = "ClaimProcessing";
+    let key = "TestProcess";
 
     assert!(start_by_key(host, key, "{}").is_ok());
 }
