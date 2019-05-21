@@ -1,3 +1,4 @@
+use log::*;
 use tokio;
 use futures;
 use hyper::{Client, Request, Body,
@@ -32,8 +33,12 @@ pub fn start_by_key(host: &str, key: &str, body: &str) -> Result<Value, task::Er
         .timeout_ms(30000)
         .url(&url).unwrap()
         .exec()?;
+		
+	let res = String::from_utf8(res)?;
+		
+	debug!("Camunda process start by key {} is {:#?}", key, res);
 
-    Ok(serde_json::from_str(&String::from_utf8(res)?)?)
+    Ok(serde_json::from_str(&res)?)
 }
 
 #[test]
