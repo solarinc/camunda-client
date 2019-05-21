@@ -5,12 +5,11 @@ use hyper::{Client, Request, Body,
     rt::{self, Future, Stream},
     header::HeaderValue
 };
-use serde_json;
-use dto::Task;
+use serde_json::{self, Value};
 use mio_httpc;
 use mio_httpc::CallBuilder;
 
-pub fn get_list_simple(url: &str) -> Result<Vec<Task>, Error> {            
+pub fn get_list_simple(url: &str) -> Result<Vec<Value>, Error> {            
     //let work = get(url);
     //let res = tokio::executor::current_thread::block_on_all(work);
 
@@ -20,9 +19,8 @@ pub fn get_list_simple(url: &str) -> Result<Vec<Task>, Error> {
     //rt::run(work);    
 
     let (_, res) = CallBuilder::get().timeout_ms(30000).url(url).unwrap().exec()?;
-    let res = String::from_utf8(res)?;
-    let res = serde_json::from_str::<Vec<Task>>(&res)?;
-    Ok(res)
+    
+    Ok(serde_json::from_str(&String::from_utf8(res)?)?)
 }
 
 pub fn complete(host: &str, task_id: &str, body: &str) -> Result<(), Error> {
@@ -53,7 +51,7 @@ pub fn complete(host: &str, task_id: &str, body: &str) -> Result<(), Error> {
     Ok(())
 }
 
-fn get(url: &str) -> impl Future<Item=Vec<Task>, Error=Error> {
+fn get(url: &str) -> impl Future<Item=Vec<Value>, Error=Error> {
     let url = url.parse().unwrap();
     let client = Client::new();
 

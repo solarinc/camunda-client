@@ -4,11 +4,12 @@ use hyper::{Client, Request, Body,
     rt::{self, Future, Stream},
     header::HeaderValue
 };
+use serde_json::Value;
 use mio_httpc;
 use mio_httpc::CallBuilder;
-use api::task;
+use crate::api::task;
 
-pub fn start_by_key(host: &str, key: &str, body: &str) -> Result<(), task::Error> {
+pub fn start_by_key(host: &str, key: &str, body: &str) -> Result<Value, task::Error> {
     /*  
     let client = Client::new();    
     let mut req = Request::post(url).body(Body::from("{}")).unwrap();
@@ -32,11 +33,7 @@ pub fn start_by_key(host: &str, key: &str, body: &str) -> Result<(), task::Error
         .url(&url).unwrap()
         .exec()?;
 
-    let q = String::from_utf8(res);
-
-    println!("{:?}", q);
-
-    Ok(())
+    Ok(serde_json::from_str(&String::from_utf8(res)?)?)
 }
 
 #[test]

@@ -1,3 +1,4 @@
+use log::*;
 use hyper::{Client, Request, rt::{self, Future}};
 use hyper_multipart_rfc7578::client::multipart;
 
@@ -13,7 +14,7 @@ pub fn create(url: &str, path_to_file: &str) {
             rt::run(
                 client
                     .request(req)
-                    .map(|res| info!("{:#?}", res))
+                    .map(|res| debug!("{:#?}", res))
                     .map_err(|e| error!("{:#?}", e)),
             );
         }
