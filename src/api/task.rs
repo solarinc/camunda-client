@@ -20,7 +20,7 @@ pub fn get_list_by_process_id(host: &str, process_id: &str) -> Result<Vec<Value>
     
     //rt::run(work);    
 
-    let (_, res) = CallBuilder::get().timeout_ms(30000).url(url).unwrap().exec()?;
+    let (_, res) = CallBuilder::get().timeout_ms(30000).url(&url).unwrap().exec()?;
     
     Ok(serde_json::from_str(&String::from_utf8(res)?)?)
 }
@@ -100,12 +100,6 @@ impl From<std::string::FromUtf8Error> for Error {
     fn from(err: std::string::FromUtf8Error) -> Error {
         Error::FromUtf8(err)
     }
-}
-
-//#[test]
-fn test_get_list_simple() {    
-    let res = get_list_simple("http://127.0.0.1:8080/engine-rest/task");
-    println!("{:#?}", res);
 }
 
 //#[test]
