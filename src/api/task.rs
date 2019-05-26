@@ -9,7 +9,9 @@ use serde_json::{self, Value};
 use mio_httpc;
 use mio_httpc::CallBuilder;
 
-pub fn get_list_simple(url: &str) -> Result<Vec<Value>, Error> {            
+pub fn get_list_by_process_id(host: &str, process_id: &str) -> Result<Vec<Value>, Error> {
+
+    let url = host.to_owned() + "/engine-rest/task?processInstanceId=" + process_id;
     //let work = get(url);
     //let res = tokio::executor::current_thread::block_on_all(work);
 
