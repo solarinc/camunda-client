@@ -1,6 +1,4 @@
-use std;
-use tokio;
-use hyper;
+use log::*;
 use hyper::{Client, Request, Body,
     rt::{self, Future, Stream},
     header::HeaderValue
@@ -12,6 +10,9 @@ use mio_httpc::CallBuilder;
 pub fn get_list_by_process_id(host: &str, process_id: &str) -> Result<Vec<Value>, Error> {
 
     let url = host.to_owned() + "/engine-rest/task?processInstanceId=" + process_id;
+	
+	debug!("{}", url);
+	
     //let work = get(url);
     //let res = tokio::executor::current_thread::block_on_all(work);
 
@@ -21,8 +22,12 @@ pub fn get_list_by_process_id(host: &str, process_id: &str) -> Result<Vec<Value>
     //rt::run(work);    
 
     let (_, res) = CallBuilder::get().timeout_ms(30000).url(&url).unwrap().exec()?;
+	
+	let res = serde_json::from_slice(&res)?;
+	
+	debug!("{:#?}", res);
     
-    Ok(serde_json::from_str(&String::from_utf8(res)?)?)
+    Ok(res)
 }
 
 pub fn complete(host: &str, task_id: &str, body: &str) -> Result<(), Error> {
