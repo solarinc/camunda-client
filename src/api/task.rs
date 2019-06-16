@@ -7,9 +7,12 @@ use serde_json::{self, Value};
 use mio_httpc;
 use mio_httpc::CallBuilder;
 
-pub fn get_list_by_process_id(host: &str, process_id: &str) -> Result<Vec<Value>, Error> {
+pub fn get_list_by_process_id(host: &str, process_id: &str, historic: bool) -> Result<Vec<Value>, Error> {
 
-    let url = host.to_owned() + "/engine-rest/task?processInstanceId=" + process_id;
+    let url = match historic {
+        true => host.to_owned() + "/engine-rest/history/task?processInstanceId=" + process_id,
+        false => host.to_owned() + "/engine-rest/task?processInstanceId=" + process_id
+    };
 	
 	debug!("{}", url);
 	
