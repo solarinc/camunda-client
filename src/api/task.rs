@@ -33,6 +33,36 @@ pub fn get_list_by_process_id(host: &str, process_id: &str, historic: bool) -> R
     Ok(res)
 }
 
+pub fn get_list(host: &str, body: &str, historic: bool) -> Result<Vec<Value>, Error> {
+
+    let url = match historic {
+        true => host.to_owned() + "/engine-rest/history/task",
+        false => host.to_owned() + "/engine-rest/task"
+    };
+	
+	debug!("{}", url);
+	
+    //let work = get(url);
+    //let res = tokio::executor::current_thread::block_on_all(work);
+
+    //println!("{:#?}", res);
+
+    
+    //rt::run(work);    
+
+    let (_, res) = CallBuilder::post(body.as_bytes().to_vec())
+        .header("Content-Type", "application/json")
+        .timeout_ms(30000)
+        .url(&url).unwrap()
+        .exec()?;
+	
+	let res = serde_json::from_slice(&res)?;
+	
+	debug!("{:#?}", res);
+    
+    Ok(res)
+}
+
 pub fn complete(host: &str, task_id: &str, body: &str) -> Result<(), Error> {
     /*
     let client = Client::new();
