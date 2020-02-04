@@ -1,50 +1,30 @@
+use std::time::Duration;
 use log::*;
-use tokio;
-use futures;
-use hyper::{Client, Request, Body,
-    rt::{self, Future, Stream},
-    header::HeaderValue
-};
-use serde_json::Value;
-use mio_httpc;
-use mio_httpc::CallBuilder;
-use crate::api::task;
+use serde_json::{Value, from_slice};
+use crate::error::Error;
 
-pub fn start_by_key(host: &str, key: &str, body: &str) -> Result<Value, task::Error> {
-    /*  
-    let client = Client::new();    
-    let mut req = Request::post(url).body(Body::from("{}")).unwrap();
-    req.headers_mut().insert("content-type", HeaderValue::from_str("application/json").unwrap());
+pub async fn start_by_key(host: &str, key: &str, body: String, timeout_ms_amount: u64) -> Result<Value, Error> {    
+    let url = format!("{}/engine-rest/process-definition/key/{}/start", host, key);
 
-    let work = client.request(req).map(|res| info!("{:#?}", res)).map_err(|e| error!("{:#?}", e));    
-
-    //let res = tokio::executor::current_thread::block_on_all(work);
-
-    //println!("{:#?}", res);
-
-    
-    rt::run(work);
-    */
-
-    let url = &format!("{}/engine-rest/process-definition/key/{}/start", host, key);
-
-    let (_, res) = CallBuilder::post(body.as_bytes().to_vec())
+    let res = reqwest::Client::new()
+        .post(&url)
+        .timeout(Duration::from_millis(timeout_ms_amount))
         .header("Content-Type", "application/json")
-        .timeout_ms(30000)
-        .url(&url).unwrap()
-        .exec()?;
-		
-	let res = String::from_utf8(res)?;
-		
-	debug!("Camunda process start by key {} is {:#?}", key, res);
+        .body(body)
+        .send()
+        .await?;
+        
+    let res = from_slice(&res.bytes().await?)?;
 
-    Ok(serde_json::from_str(&res)?)
+    Ok(res)
 }
 
-#[test]
+/*
+//#[test]
 fn test_start_by_key() {
     let host = "http://127.0.0.1:8080";
     let key = "TestProcess";
 
     assert!(start_by_key(host, key, "{}").is_ok());
 }
+*/

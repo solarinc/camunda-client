@@ -1,28 +1,30 @@
 use log::*;
-use hyper::{Client, Request, rt::{self, Future}};
-use hyper_multipart_rfc7578::client::multipart;
+use tokio::fs::File;
+use tokio::prelude::*;
+use reqwest::multipart::{Form, Part};
+use crate::error::Error;
 
-pub fn create(url: &str, path_to_file: &str) {
-    let client = Client::new();    
-    let mut builder = Request::post(url);
-    let mut form = multipart::Form::default();
+pub async fn create(url: &str, path_to_file: &str) -> Result<(), Error> {
+    let mut file = File::open(path_to_file).await?;
 
-    match form.add_file("upload", path_to_file) {
-        Ok(()) => {            
-            let req = form.set_body(&mut builder).unwrap();
+    let mut data = vec![];
+    file.read_to_end(&mut data).await?;
 
-            rt::run(
-                client
-                    .request(req)
-                    .map(|res| debug!("{:#?}", res))
-                    .map_err(|e| error!("{:#?}", e)),
-            );
-        }
-        Err(e) => error!("{:#?}", e)
-    }    
+    let form = Form::new()
+        .part("upload", Part::bytes(vec![]));
+    
+    reqwest::Client::new()
+        .post(url)
+        .multipart(form)
+        .send()
+        .await?;
+
+    Ok(())
 }
 
+/*
 //#[test]
 fn test_create() {    
-    create("http://127.0.0.1:8080/engine-rest/deployment/create", "test-process.bpmn");
+    create("http://127.0.0.1:8080/engine-rest/deployment/create", "test-process.bpmn").await;
 }
+*/

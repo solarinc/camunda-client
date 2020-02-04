@@ -7,11 +7,8 @@ edition = "2018"
 [dependencies]
 
 log = "*"
-futures = "0.1.21"
-tokio = "*"
-hyper = "*"
 serde = "*"
 serde_derive = "*"
 serde_json = "*"
-hyper-multipart-rfc7578 = "0.2.0-alpha2"
-mio_httpc = "*"
+tokio = { version = "0.2", features = ["fs"] }
+reqwest = "*"
