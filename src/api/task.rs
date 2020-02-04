@@ -3,6 +3,23 @@ use log::*;
 use serde_json::{Value, from_slice};
 use crate::error::Error;
 
+pub async fn get_list_by_case_instance_id(host: &str, case_instance_id: &str, historic: bool, timeout_ms_amount: u64) -> Result<Vec<Value>, Error> {
+    let url = match historic {
+        true => host.to_owned() + "/engine-rest/history/task?caseInstanceId=" + process_id,
+        false => host.to_owned() + "/engine-rest/task?caseInstanceId=" + process_id
+    };
+
+    let res = reqwest::Client::new()
+        .get(&url)
+        .timeout(Duration::from_millis(timeout_ms_amount))
+        .send()
+        .await?;
+	
+	let res = from_slice(&res.bytes().await?)?;
+    
+    Ok(res)
+}
+
 pub async fn get_list_by_process_id(host: &str, process_id: &str, historic: bool, timeout_ms_amount: u64) -> Result<Vec<Value>, Error> {
     let url = match historic {
         true => host.to_owned() + "/engine-rest/history/task?processInstanceId=" + process_id,
