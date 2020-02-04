@@ -4,7 +4,7 @@ use serde_json::{Value, from_slice};
 use crate::error::Error;
 
 pub async fn create_by_key(host: &str, case_definition_key: &str, body: String, timeout_ms_amount: u64) -> Result<Value, Error> {    
-    let url = format!("{}/engine-rest/case-definition/key/{key}/create", host, case_definition_key);
+    let url = format!("{}/engine-rest/case-definition/key/{}/create", host, case_definition_key);
 
     let res = reqwest::Client::new()
         .post(&url)
