@@ -5,8 +5,8 @@ use crate::error::Error;
 
 pub async fn get_list_by_case_instance_id(host: &str, case_instance_id: &str, historic: bool, timeout_ms_amount: u64) -> Result<Vec<Value>, Error> {
     let url = match historic {
-        true => host.to_owned() + "/engine-rest/history/task?caseInstanceId=" + process_id,
-        false => host.to_owned() + "/engine-rest/task?caseInstanceId=" + process_id
+        true => host.to_owned() + "/engine-rest/history/task?caseInstanceId=" + case_instance_id,
+        false => host.to_owned() + "/engine-rest/task?caseInstanceId=" + case_instance_id
     };
 
     let res = reqwest::Client::new()
