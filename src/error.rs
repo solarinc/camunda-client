@@ -2,7 +2,8 @@
 pub enum Error {
     Io(std::io::Error),
     SerdeJson(serde_json::Error),
-    Reqwest(reqwest::Error)
+	Reqwest(reqwest::Error),
+	FailedToGetFileNameFromPath
 }
 
 impl From<std::io::Error> for Error {
