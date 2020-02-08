@@ -1,6 +1,6 @@
 use std::time::Duration;
 use log::*;
-use serde_json::{Value, from_slice};
+use serde_json::{Value, from_str};
 use crate::error::Error;
 
 pub async fn start_by_key(host: &str, key: &str, body: String, timeout_ms_amount: u64) -> Result<Value, Error> {    
@@ -12,11 +12,14 @@ pub async fn start_by_key(host: &str, key: &str, body: String, timeout_ms_amount
         .header("Content-Type", "application/json")
         .body(body)
         .send()
+        .await?
+        .text()
         .await?;
-        
-    let res = from_slice(&res.bytes().await?)?;
 
-    Ok(res)
+    match from_str(&res) {
+        Ok(res) => Ok(res),
+        Err(_) => Err(Error::Camunda(res))
+    }            
 }
 
 /*

@@ -37,7 +37,7 @@ pub async fn get_list_by_process_id(host: &str, process_id: &str, historic: bool
     Ok(res)
 }
 
-pub async fn get_list(host: &str, body: &str, historic: bool, timeout_ms_amount: u64) -> Result<Vec<Value>, Error> {
+pub async fn get_list(host: &str, body: Value, historic: bool, timeout_ms_amount: u64) -> Result<Vec<Value>, Error> {
     let url = match historic {
         true => host.to_owned() + "/engine-rest/history/task",
         false => host.to_owned() + "/engine-rest/task"
@@ -45,8 +45,10 @@ pub async fn get_list(host: &str, body: &str, historic: bool, timeout_ms_amount:
 	
 
     let res = reqwest::Client::new()
-        .get(&url)
+        .post(&url)
         .timeout(Duration::from_millis(timeout_ms_amount))
+        .header("Content-Type", "application/json")
+        .body(body.to_string())
         .send()
         .await?;
 	
