@@ -4,7 +4,7 @@ use tokio::prelude::*;
 use reqwest::multipart::{Form, Part};
 use crate::error::Error;
 
-pub async fn create(url: &str, path_to_file: &str) -> Result<(), Error> {
+pub async fn create(url: &str, path_to_file: &str) -> Result<String, Error> {
     let mut file = File::open(path_to_file).await?;
 
     let mut data = vec![];
@@ -13,13 +13,15 @@ pub async fn create(url: &str, path_to_file: &str) -> Result<(), Error> {
     let form = Form::new()
         .part("upload", Part::bytes(vec![]));
     
-    reqwest::Client::new()
+    let res = reqwest::Client::new()
         .post(url)
         .multipart(form)
         .send()
+        .await?
+        .text()
         .await?;
 
-    Ok(())
+    Ok(res)
 }
 
 /*
