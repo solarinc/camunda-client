@@ -11,7 +11,7 @@ pub async fn create(url: &str, path_to_file: &str) -> Result<String, Error> {
     file.read_to_end(&mut data).await?;
 
     let form = Form::new()
-        .part("upload", Part::bytes(vec![]));
+        .part("upload", Part::bytes(data));
     
     let res = reqwest::Client::new()
         .post(url)
